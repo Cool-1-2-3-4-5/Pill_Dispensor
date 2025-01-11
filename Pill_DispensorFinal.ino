@@ -6,12 +6,12 @@ int leftButton = 6;
 int rightButton = 5;
 int autoButton = 4;
 // Pill variables
-int redPills = 5;
-int whitePills = 5;
-int redCnt;
-int whiteCnt;
-int autoRedCnt = 1;
-int autoWhiteCnt = 1;
+int rightPills = 5;
+int leftPills = 5;
+int rightCnt;
+int leftCnt;
+int autoRightCnt = 1;
+int autoLeftCnt = 1;
 int seconds = 0;
 // Servo and LCD variables
 LiquidCrystal lcd_1(12, 11, 10, 9, 3, 2);
@@ -32,13 +32,13 @@ void setup(){
   left.write(0);
   right.write(0);
 }
-void run(int r_pills, int w_pills){
+void run(int r_pills, int l_pills){
   for(int i = 1; i <= r_pills; i++){
     pos_left = pos_left + 30;
     left.write(pos_left);
     delay(1000);
   }
-  for(int j = 1; j <= w_pills; j++){
+  for(int j = 1; j <= l_pills; j++){
     pos_right = pos_right + 30;
     right.write(pos_right);
     delay(1000);
@@ -50,7 +50,7 @@ void run_reset(){
 }
 
 void loop(){
-  if(redPills <= 0 || whitePills <= 0){ // Check to see if there are pills
+  if(rightPills <= 0 || leftPills <= 0){ // Check to see if there are pills
     while(!digitalRead(resetContButton)){
       lcd_1.setCursor(0, 0);
       lcd_1.print("Reset! Remove");
@@ -73,69 +73,69 @@ void loop(){
     lcd_1.print("Successfully");
     lcd_1.setCursor(0, 1);
     lcd_1.print("Reset!");
-    redPills = 5;
-    whitePills = 5;
+    rightPills = 5;
+    leftPills = 5;
     delay(1000);
   }
   else{
     if(digitalRead(7)){ // Manual
       lcd_1.clear();
       delay(400);
-      redCnt = 0;
-      whiteCnt = 0;
+      rightCnt = 0;
+      leftCnt = 0;
       lcd_1.print("What would like?"); // Display the number of pills
       lcd_1.setCursor(0, 1);
-      lcd_1.print("RP: " + String(redPills) + " WP: " + String(whitePills));
+      lcd_1.print("RP: " + String(rightPills) + " LP: " + String(leftPills));
       delay(1500);
       lcd_1.clear();
-      lcd_1.print("Select Red Pills");
+      lcd_1.print("Select Right Pills");
       lcd_1.setCursor(0, 1);
-      lcd_1.print("0-"+ String(redPills) + " available");
+      lcd_1.print("0-"+ String(rightPills) + " available");
       delay(1000);
       lcd_1.clear();
       delay(300);
-      while((!digitalRead(resetContButton)) || !(redCnt <= redPills && redCnt >= 0)){ // Set desired Red Pills with correct range
-        lcd_1.print("Red Pills: " + String(redCnt));
+      while((!digitalRead(resetContButton)) || !(rightCnt <= rightPills && rightCnt >= 0)){ // Set desired Right Pills with correct range
+        lcd_1.print("Right Pills: " + String(rightCnt));
         delay(200);
         if(digitalRead(leftButton)){ // increase
-          redCnt = redCnt + 1;
+          rightCnt = rightCnt + 1;
           delay(200);
         }
         else if(digitalRead(rightButton)){ // decrease
-          redCnt = redCnt - 1;
+          rightCnt = rightCnt - 1;
           delay(200);
         }
         lcd_1.clear();
       }
       delay(200);
       lcd_1.clear();
-      lcd_1.print("Select White Pills"); // Display the number of pills
+      lcd_1.print("Select Left Pills"); // Display the number of pills
       lcd_1.setCursor(0, 1);
-      lcd_1.print("0-"+ String(whitePills) + " available");
+      lcd_1.print("0-"+ String(leftPills) + " available");
       delay(1000);
       lcd_1.clear();
       delay(300);
-      while((!digitalRead(resetContButton)) || !(whiteCnt <= whitePills && whiteCnt >= 0)){ // Set desired White Pills with correct range
-        lcd_1.print("White Pills: " + String(whiteCnt));
+      while((!digitalRead(resetContButton)) || !(leftCnt <= leftPills && leftCnt >= 0)){ // Set desired Left Pills with correct range
+        lcd_1.print("Left Pills: " + String(leftCnt));
         delay(200);
         if(digitalRead(leftButton)){ // Increase
-          whiteCnt = whiteCnt + 1;
+          leftCnt = leftCnt + 1;
           delay(200);
         }
         else if(digitalRead(rightButton)){ // Decrease
-          whiteCnt = whiteCnt - 1;
+          leftCnt = leftCnt - 1;
           delay(200);
         }
         lcd_1.clear();
       }
       delay(200);
-      run(redCnt,whiteCnt);
+      run(rightCnt,leftCnt);
       delay(1000);
       lcd_1.print("Success!");
       lcd_1.setCursor(0,1);
-      lcd_1.print("RP: " + String(redCnt) + "   WP: " + String(whiteCnt));
-      redPills = redPills - redCnt; // Update pill counters
-      whitePills = whitePills - whiteCnt;
+      lcd_1.print("RP: " + String(rightCnt) + "   LP: " + String(leftCnt));
+      rightPills = rightPills - rightCnt; // Update pill counters
+      leftPills = leftPills - leftCnt;
       delay(1500);
       lcd_1.clear();
       delay(300);
@@ -147,36 +147,36 @@ void loop(){
       lcd_1.print("Pill Set");
       delay(1000);
       lcd_1.clear();
-      while((!digitalRead(resetContButton)) && autoRedCnt <= redPills && autoWhiteCnt <= whitePills){ // Wait till button is presssed and pill set is in range
+      while((!digitalRead(resetContButton)) && autoRightCnt <= rightPills && autoLeftCnt <= leftPills){ // Wait till button is presssed and pill set is in range
         if(digitalRead(4)){ // Change pill set
           delay(2000);
-          while(!digitalRead(4) || !(autoRedCnt <= redPills && autoRedCnt >= 0)){ // Change number of red pills
-            lcd_1.print("Change Red Set");
+          while(!digitalRead(4) || !(autoRightCnt <= rightPills && autoRightCnt >= 0)){ // Change number of Right pills
+            lcd_1.print("Change Right Set");
             lcd_1.setCursor(0,1);
-            lcd_1.print("RP: " + String(autoRedCnt) + "  WP: " + String(autoWhiteCnt));
+            lcd_1.print("RP: " + String(autoRightCnt) + "  LP: " + String(autoLeftCnt));
             delay(200);
             if(digitalRead(leftButton)){ // Increase
-              autoRedCnt = autoRedCnt + 1;
+              autoRightCnt = autoRightCnt + 1;
               delay(200);
             }
             else if(digitalRead(rightButton)){ // Decrease
-              autoRedCnt = autoRedCnt - 1;
+              autoRightCnt = autoRightCnt - 1;
               delay(200);
             }
             lcd_1.clear();
           }
           delay(2000);
-          while(!digitalRead(4) || !(autoWhiteCnt <= redPills && autoWhiteCnt >= 0)){ // Change number of white pills
-            lcd_1.print("Change White Set");
+          while(!digitalRead(4) || !(autoLeftCnt <= rightPills && autoLeftCnt >= 0)){ // Change number of Left pills
+            lcd_1.print("Change Left Set");
             lcd_1.setCursor(0,1);
-            lcd_1.print("RP: " + String(autoRedCnt) + "  WP: " + String(autoWhiteCnt));
+            lcd_1.print("RP: " + String(autoRightCnt) + "  LP: " + String(autoLeftCnt));
             delay(200);
             if(digitalRead(leftButton)){ // Increase
-              autoWhiteCnt = autoWhiteCnt + 1;
+              autoLeftCnt = autoLeftCnt + 1;
               delay(200);
             }
             else if(digitalRead(rightButton)){ // Decrease
-              autoWhiteCnt = autoWhiteCnt - 1;
+              autoLeftCnt = autoLeftCnt - 1;
               delay(200);
             }
             lcd_1.clear();
@@ -194,20 +194,20 @@ void loop(){
           lcd_1.setCursor(0,0);
           lcd_1.print("Pills Set");
           lcd_1.setCursor(0,1);
-          lcd_1.print("RP: " + String(autoRedCnt) + "  WP: " + String(autoWhiteCnt));
+          lcd_1.print("RP: " + String(autoRightCnt) + "  LP: " + String(autoLeftCnt));
           delay(500);
           lcd_1.clear();
           delay(100);
         }
       }
       delay(100);
-      run(autoRedCnt,autoWhiteCnt);
+      run(autoRightCnt,autoLeftCnt);
       delay(2000);
       lcd_1.setCursor(0,0);
       lcd_1.print("Auto Successful!");
       delay(1000);
-      redPills = redPills - autoRedCnt; // Update pill counters
-      whitePills = whitePills - autoWhiteCnt;
+      rightPills = rightPills - autoRightCnt; // Update pill counters
+      leftPills = leftPills - autoLeftCnt;
       lcd_1.clear();
     } 
     else{ // Wait till user picks mode
